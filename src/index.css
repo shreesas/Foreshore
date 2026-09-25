@@ -1,0 +1,184 @@
+@import "tailwindcss";
+
+/*
+  Foreshore style guide
+  Type: Instrument Serif (display, from Google Fonts in index.html) + Fira Sans (body, UI) + Caveat (margin notes)
+  Scale: 12 / 16 / 20 / 24 / 32 / 40 / 48 / 64 / 96, line-heights on a 4px grid
+  Space: Tailwind's default 4px scale (p-4 = 16px, gap-6 = 24px, py-24 = 96px)
+  Color: navy, teal, sand, mint, white. Every other color is a mix of those five.
+*/
+@theme {
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-sans: "Fira Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-hand: "Caveat", "Segoe Script", "Bradley Hand", cursive;
+
+  /* Final palette (2026-09-24), "Shore": navy #023146 ink and dark sections, teal #52beb0 accent,
+     sand #d4a373 warm spark, mint #ddf1f1 page ground, white #ffffff panels. 60 / 30 / 10.
+     Token names are unchanged: navy and ink are the navy, sky is the teal, sand is the sand.
+     Everything else is a mix of the five, never a new hue. */
+  --color-sand: #d4a373;
+  --color-sand-light: color-mix(in srgb, #d4a373 30%, #ffffff);
+  --color-navy: #023146;
+  --color-night: #023146;
+  --color-sky: #52beb0;
+  --color-sky-light: color-mix(in srgb, #52beb0 30%, #ffffff);
+  --color-foam: color-mix(in srgb, #52beb0 20%, #ddf1f1);
+  --color-paper: #ddf1f1;
+  --color-ink: #023146;
+  --color-ink-muted: color-mix(in srgb, #023146 70%, #ffffff);
+  --color-line: color-mix(in srgb, #52beb0 30%, #ddf1f1);
+  --color-wire: color-mix(in srgb, #023146 35%, #ffffff);
+  --color-wire-bg: #ffffff;
+  --color-dusk: #d4a373;
+  --color-grid: rgba(2, 49, 70, 0.10);
+
+  --text-12: 12px;  --text-12--line-height: 16px;
+  --text-16: 16px;  --text-16--line-height: 24px;
+  --text-20: 20px;  --text-20--line-height: 28px;
+  --text-24: 24px;  --text-24--line-height: 32px;
+  --text-32: 32px;  --text-32--line-height: 40px;
+  --text-40: 40px;  --text-40--line-height: 48px;
+  --text-48: 48px;  --text-48--line-height: 56px;
+  --text-64: 64px;  --text-64--line-height: 72px;
+  --text-96: 96px;  --text-96--line-height: 96px;
+  --text-128: 128px; --text-128--line-height: 120px;
+  --text-160: 160px; --text-160--line-height: 144px;
+  --text-display: clamp(72px, 12.5vw, 184px); --text-display--line-height: 0.92;
+  --text-statement: clamp(40px, 6vw, 96px); --text-statement--line-height: 1.04;
+
+  --radius-phone: 44px;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  /* full-bleed pieces use 100vw, which includes a classic scrollbar; never let that scroll sideways */
+  body { overflow-x: clip; }
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; margin: 0; letter-spacing: -0.01em; }
+  p { margin: 0; }
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  ::selection { background: var(--color-sky-light); }
+}
+
+/* Line art draws itself in. pathLength="1" on each path makes the dash math trivial. */
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.bob { animation: bob 5s ease-in-out infinite; }
+@keyframes kenburns { from { transform: scale(1.04) translateY(0); } to { transform: scale(1.12) translateY(-2%); } }
+.kenburns { animation: kenburns 40s ease-in-out infinite alternate; }
+@keyframes twinkle { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .draw { animation: none; stroke-dashoffset: 0; }
+  .bob, .kenburns { animation: none; }
+}
+
+/* Time scrubber */
+.scrub { -webkit-appearance: none; appearance: none; width: 100%; height: 24px; background: transparent; margin: 0; }
+.scrub:focus { outline: none; }
+.scrub::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: rgba(255,255,255,0.35); }
+.scrub::-moz-range-track { height: 4px; border-radius: 4px; background: rgba(255,255,255,0.35); }
+.scrub::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -8px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px rgba(255,255,255,0.25), 0 2px 8px rgba(2,49,70,0.4); }
+.scrub::-moz-range-thumb { width: 20px; height: 20px; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px rgba(255,255,255,0.25), 0 2px 8px rgba(2,49,70,0.4); }
+.scrub:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--color-sky), 0 2px 8px rgba(2,49,70,0.4); }
+
+/* Wireframe look for the clickable flow. wire-hatch is the same fill with no border, for full-bleed heroes. */
+.wire-box { border: 1px dashed var(--color-wire); background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(2,49,70,0.08) 8px 9px); }
+.wire-hatch { background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(2,49,70,0.08) 8px 9px); }
+
+/* Field-notebook grid behind the paper chapters. One size for every grid on the page, the navy stats panel included. */
+:root { --grid: 80px; }
+.paper-grid {
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: var(--grid) var(--grid);
+  background-position: -1px -1px;
+}
+/* The same field-notebook grid on white, so a gridded section can still differ from the mint hero next to it. */
+.white-grid {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: var(--grid) var(--grid);
+  background-position: -1px -1px;
+}
+.navy-grid {
+  background-color: var(--color-navy);
+  background-image:
+    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: var(--grid) var(--grid);
+}
+
+/* Horizontal strip that never stops */
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Floating margin annotations on the hero grid */
+@keyframes float { 0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); } 50% { transform: translateY(-6px) rotate(var(--r, 0deg)); } }
+.annot { animation: float 7s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .annot { animation: none; } }
+
+/* Finished drawings are filled shapes, not strokes, so they wipe in left to right like a pen pass.
+   The clip ends outset, so a wing turned past the box, or the halo, is not cut off afterwards. */
+@keyframes wipe { from { clip-path: inset(0 100% 0 0); opacity: 0.6; } 80% { clip-path: inset(0 0 0 0); opacity: 1; } to { clip-path: inset(-40%); opacity: 1; } }
+.wipe { animation: wipe 1.4s cubic-bezier(0.4, 0, 0.2, 1) both; }
+@media (prefers-reduced-motion: reduce) { .wipe { animation: none; clip-path: none; } }
+
+/* The camera photo is 140% of the frame tall and drifts from sky to sand and back, like a slow tilt. */
+
+/* Scroll areas inside the phone: a thin navy pill, inset from the edge, faint until the panel is hovered.
+   Chrome and Safari take the ::-webkit-scrollbar rules; Firefox only understands scrollbar-width/color. */
+.soft-scroll::-webkit-scrollbar { width: 10px; }
+.soft-scroll::-webkit-scrollbar-track { background: transparent; }
+.soft-scroll::-webkit-scrollbar-thumb {
+  background: rgba(2, 49, 70, 0.14);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 999px;
+}
+.soft-scroll:hover::-webkit-scrollbar-thumb { background-color: rgba(2, 49, 70, 0.32); }
+.soft-scroll::-webkit-scrollbar-thumb:active { background-color: rgba(2, 49, 70, 0.5); }
+@supports not selector(::-webkit-scrollbar) {
+  .soft-scroll { scrollbar-width: thin; scrollbar-color: rgba(2, 49, 70, 0.25) transparent; }
+}
+
+/* Content never runs wider than 1600px; backgrounds still fill the screen.
+   .edge-l / .edge-r place absolute text on the same column edge as everything else. */
+.edge-l { left: 1.5rem; }
+.edge-r { right: 1.5rem; }
+@media (min-width: 768px) {
+  .edge-l { left: max(2.5rem, calc((100% - 1600px) / 2)); }
+  .edge-r { right: max(2.5rem, calc((100% - 1600px) / 2)); }
+}
+@media (min-width: 1024px) {
+  .edge-l { left: max(70px, calc((100% - 1600px) / 2)); }
+  .edge-r { right: max(70px, calc((100% - 1600px) / 2)); }
+}
+
+/* On big, tall monitors the fixed-size wireframe phone steps up with the screen instead of
+   shrinking into the middle of it. zoom scales it as one piece, so its inner layout never
+   changes; the height guard keeps the pinned phone inside the window. */
+@media (min-width: 1900px) and (min-height: 1100px) { .grow-xl { zoom: 1.15; } }
+@media (min-width: 2300px) and (min-height: 1250px) { .grow-xl { zoom: 1.3; } }
